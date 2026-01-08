@@ -1,8 +1,5 @@
-import OpenAI from "openai";
 
-const API_KEY = import.meta.env.VITE_DASHSCOPE_API_KEY;
-
-// Fallback feedback if API fails or no key
+// Fallback feedback if API fails
 const FALLBACK_FEEDBACKS = [
   "释放了这些情绪，你会感觉轻松很多。",
   "每一个结束都是新的开始。",
@@ -15,44 +12,43 @@ export const generateFeedback = async (
   emotion: string, 
   onChunk: (chunk: string) => void
 ): Promise<void> => {
-  if (!API_KEY) {
-    console.warn("No API Key found. Using fallback feedback.");
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: emotion }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Proxy error: ${response.statusText}`);
+    }
+
+    if (!response.body) {
+        throw new Error("No response body");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      onChunk(chunk);
+    }
+    return;
+
+  } catch (error) {
+    console.warn("Backend API failed, using fallback:", error);
+    
+    // Local Fallback
     const randomFeedback = FALLBACK_FEEDBACKS[Math.floor(Math.random() * FALLBACK_FEEDBACKS.length)];
-    // Simulate streaming
     const words = randomFeedback.split("");
     for (const word of words) {
       await new Promise(resolve => setTimeout(resolve, 50));
       onChunk(word);
     }
-    return;
-  }
-
-  try {
-    const openai = new OpenAI({
-      apiKey: API_KEY,
-      baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
-      dangerouslyAllowBrowser: true 
-    });
-
-    const completion = await openai.chat.completions.create({
-      model: "qwen3-max",
-      messages: [
-        { role: "system", content: "你是一个温暖、富有同理心的心理支持助手。用户刚刚通过一种仪式感（如燃烧、揉皱）销毁了他们的负面情绪。请根据用户倾诉的内容，给出一段简短、治愈、鼓舞人心的反馈（100字以内）。语气要温柔、坚定。" },
-        { role: "user", content: `我刚刚销毁了这些情绪：${emotion}` }
-      ],
-      stream: true
-    });
-
-    for await (const chunk of completion) {
-      const content = chunk.choices[0]?.delta?.content || "";
-      if (content) {
-        onChunk(content);
-      }
-    }
-  } catch (error) {
-    console.error("AI Generation Error:", error);
-    // On error, send a fallback message
-    const errorFeedback = "虽然连接有点小问题，但你的情绪已经安全释放。愿你此刻内心平静。";
-    onChunk(errorFeedback);
   }
 };
