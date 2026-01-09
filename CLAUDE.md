@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Mood Trash Can (情绪垃圾桶)** - A therapeutic web app where users write down negative emotions, select a destruction animation, and receive AI-generated comforting feedback. Built with Next.js 16, React, TypeScript, Framer Motion, and Tailwind CSS.
+**Mood Trash Can (情绪垃圾桶)** - A therapeutic web app where users write down negative emotions, select a destruction animation, and receive AI-generated comforting feedback. Built with Next.js 14, React, TypeScript, Framer Motion, and Tailwind CSS.
 
 ## Development Commands
 
