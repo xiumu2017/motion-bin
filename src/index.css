@@ -4,6 +4,13 @@
 
 @layer base {
   body {
-    @apply bg-background text-gray-900 font-sans antialiased;
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-900 font-sans antialiased min-h-screen;
   }
+}
+
+.paper-lines {
+  background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 100% 2rem;
+  line-height: 2rem;
+  background-attachment: local;
 }

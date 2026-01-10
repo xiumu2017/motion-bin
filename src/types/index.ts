@@ -1,4 +1,4 @@
-export type DestructionMethod = 'burn' | 'crumple' | 'delete';
+export type DestructionMethod = 'burn' | 'crumple' | 'delete' | 'shred' | 'particle';
 
 export interface EmotionRecord {
   id: string;

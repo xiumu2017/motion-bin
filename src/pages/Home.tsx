@@ -17,11 +17,15 @@ const Home: React.FC = () => {
   const isReady = currentEmotion.trim().length > 0 && destructionMethod !== null;
 
   return (
-    <div className="flex flex-col items-center max-w-4xl mx-auto py-12">
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-primary mb-4">情绪垃圾桶</h1>
-        <p className="text-gray-600 text-lg">
-          写下你的烦恼，让我们帮你销毁坏情绪
+    <div className="flex flex-col items-center max-w-4xl mx-auto py-16 px-4">
+      <header className="text-center mb-16 animate-fade-in-down">
+        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 mb-6 tracking-tight">
+          情绪垃圾桶
+        </h1>
+        <p className="text-gray-600 text-xl font-light max-w-2xl mx-auto leading-relaxed">
+          把烦恼写下来，选择一种方式销毁它。
+          <br />
+          让负面情绪随风而去，找回内心的平静。
         </p>
       </header>
 
@@ -33,15 +37,19 @@ const Home: React.FC = () => {
         onClick={handleStart}
         disabled={!isReady}
         className={`
-          flex items-center justify-center gap-2 px-12 py-4 rounded-full text-lg font-bold transition-all duration-300
+          group flex items-center justify-center gap-3 px-16 py-5 rounded-full text-xl font-bold transition-all duration-300 shadow-xl
           ${isReady 
-            ? 'bg-secondary text-white shadow-lg hover:bg-orange-600 hover:shadow-xl transform hover:-translate-y-1' 
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
+            ? 'bg-gradient-to-r from-secondary to-orange-600 text-white shadow-orange-200 hover:shadow-orange-300 hover:scale-105 hover:-translate-y-1' 
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
         `}
       >
         <span>开始销毁</span>
-        <ArrowRight size={24} />
+        <ArrowRight size={24} className={`transition-transform duration-300 ${isReady ? 'group-hover:translate-x-1' : ''}`} />
       </button>
+      
+      <footer className="mt-20 text-gray-400 text-sm">
+        <p>© 2024 Motion Bin - 你的情绪回收站</p>
+      </footer>
     </div>
   );
 };
